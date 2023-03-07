@@ -1,0 +1,51 @@
+<div class="container">
+	<div class="alert alert-danger" role="alert" ng-if="errorMessage">{{errorMessage}}</div>
+	<div class="panel panel-default ">
+		<div class="alert alert-success">
+			<span class="lead">建立新的软件资产信息</span>
+			<p>请确保软件资产名唯一</p>
+		</div>
+		<div class="panel-body ">
+			<div class="container">
+				<form ng-submit="submitAssetForm()" name="myForm"
+					class="form-horizontal">
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="uname">软件名称</label>
+							<div class="col-md-7">
+								<input type="text" ng-model="asset.name" id="uname"
+									class="form-control input-sm" placeholder="请输入软件名称" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="manufacturer">生产厂家</label>
+							<div class="col-md-7">
+								<input type="text" ng-model="asset.manufacturer" id="manufacturer"
+									class="form-control input-sm" placeholder="请输入生产厂家完整名称" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="price">软件合同总价</label>
+							<div class="col-md-7">
+								<input type="text" ng-model="asset.price" id="price"
+									class="form-control input-sm" placeholder="请输入软件合同总价金额" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-actions floatRight">
+							<input type="submit" value="申请"
+								class="btn btn-primary btn-sm">
+							<button type="button" ng-click="resetForm()"
+								class="btn btn-warning btn-sm">重置</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
