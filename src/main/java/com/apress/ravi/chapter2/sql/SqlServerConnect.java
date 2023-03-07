@@ -27,7 +27,7 @@ public class SqlServerConnect {
     public static Connection getConnection(){
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection(connectionUrl)
+            conn = DriverManager.getConnection(connectionUrl);
         } catch (Exception e) {
             e.printStackTrace();
         }
