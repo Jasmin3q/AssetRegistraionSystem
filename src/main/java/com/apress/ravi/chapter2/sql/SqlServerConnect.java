@@ -27,8 +27,7 @@ public class SqlServerConnect {
     public static Connection getConnection(){
         Connection conn = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/jikebook","root","123456");
+            conn = DriverManager.getConnection(connectionUrl)
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -37,9 +36,9 @@ public class SqlServerConnect {
 
     public static List<AssetsDTO> findAll() {
 		List<AssetsDTO> assets = new ArrayList<AssetsDTO>();
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-                Statement statement = connection.createStatement();) {
-
+        Connection conn = getConnection();
+        try {
+            Statement statement = conn.createStatement();
             String selectSql = "SELECT * from dbo.asset";
             ResultSet resultSet = statement.executeQuery(selectSql);
 
@@ -51,6 +50,7 @@ public class SqlServerConnect {
                 currAsset.setPrice(resultSet.getFloat(4));
                 assets.add(currAsset);
             }
+            conn.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -61,8 +61,9 @@ public class SqlServerConnect {
     
     public static AssetsDTO findById(Long id) {
 		AssetsDTO asset = null;
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-                Statement statement = connection.createStatement();) {
+        Connection conn = getConnection();
+        try {
+            Statement statement = conn.createStatement();
             String selectSql = "SELECT * from dbo.asset where asset_id="+String.valueOf(id)+"; ";
             System.out.println(selectSql);
             ResultSet resultSet = statement.executeQuery(selectSql);
@@ -80,6 +81,7 @@ public class SqlServerConnect {
             if(cnt==0){
                 asset = null;
             }
+            conn.close();
         }
         catch (SQLException e) {
             System.out.println("Connection Failed");
@@ -91,9 +93,9 @@ public class SqlServerConnect {
     
     public static AssetsDTO findByName(String name) {
 		AssetsDTO asset = null;
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-                Statement statement = connection.createStatement();) {
-
+        Connection conn = getConnection();
+        try {
+            Statement statement = conn.createStatement();
             String selectSql = "SELECT * from dbo.asset where asset_name='"+String.valueOf(name)+"';";
             System.out.println(selectSql);
 ;
@@ -112,6 +114,7 @@ public class SqlServerConnect {
             if(cnt==0){
                 asset = null;
             }
+            conn.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -121,9 +124,9 @@ public class SqlServerConnect {
 
     public static Integer findMaxId() {
         Integer maxId = 1;
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-                Statement statement = connection.createStatement();) {
-
+        Connection conn = getConnection();
+        try {
+            Statement statement = conn.createStatement();
             String selectSql = "SELECT max(asset_id) from dbo.asset;";
             
             ResultSet resultSet = statement.executeQuery(selectSql);
@@ -132,7 +135,7 @@ public class SqlServerConnect {
                 maxId = Integer.parseInt(resultSet.getString(1));
                 System.out.println("maxId:"+resultSet.getString(1));
             }
-            
+            conn.close();
 
         }
         catch (SQLException e) {
@@ -143,22 +146,21 @@ public class SqlServerConnect {
     
     public static void save(AssetsDTO asset) {
         Integer maxId = findMaxId() +1;
-        String insertSql = "INSERT INTO dbo.asset (asset_id,asset_name,manufacturer,price) VALUES ("
-        + maxId +",'"+ asset.getName() +"','"+ asset.getManufacturer() +"',"+ asset.getPriceStr()+");" ;
-        System.out.println(insertSql);
         ResultSet resultSet = null;
-
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-                PreparedStatement prepsInsertProduct = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);) {
-
+        
+        Connection conn = getConnection();
+        try {
+            String insertSql = "INSERT INTO dbo.asset (asset_id,asset_name,manufacturer,price) VALUES ("
+                + maxId +",'"+ asset.getName() +"','"+ asset.getManufacturer() +"',"+ asset.getPriceStr()+");" ;
+            PreparedStatement prepsInsertProduct = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
             prepsInsertProduct.execute();
             resultSet = prepsInsertProduct.getGeneratedKeys();
 
             while (resultSet.next()) {
                 System.out.println("Generated: " + resultSet.getString(1));
             }
+            conn.close();
         }
-    
         catch (SQLException e) {
             e.printStackTrace();
         }
@@ -166,14 +168,11 @@ public class SqlServerConnect {
 
     
     public static void delete(Long id) {
+        Connection conn = getConnection();
 
-        String deleteSql = "DELETE from dbo.asset WHERE asset_id = "+id.toString()+";";
-        System.out.println(deleteSql);
-        // ResultSet resultSet = null;
-
-        try (Connection connection = DriverManager.getConnection(connectionUrl);
-                PreparedStatement prepsDeleteProduct = connection.prepareStatement(deleteSql);) {
-
+        try {
+            String deleteSql = "DELETE from dbo.asset WHERE asset_id = "+id.toString()+";";
+            PreparedStatement prepsDeleteProduct = conn.prepareStatement(deleteSql);
             prepsDeleteProduct.execute();
             // resultSet = prepsInsertProduct.getGeneratedKeys();
 
