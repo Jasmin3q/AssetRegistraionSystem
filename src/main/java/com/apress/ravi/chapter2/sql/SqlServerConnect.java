@@ -1,4 +1,4 @@
-package com.apress.ravi.chapter2.sql;
+package com.apress.ravi.chapter2.Sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

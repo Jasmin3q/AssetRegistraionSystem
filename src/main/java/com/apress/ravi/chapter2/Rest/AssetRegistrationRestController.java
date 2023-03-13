@@ -21,9 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apress.ravi.chapter2.Exception.CustomErrorType;
+import com.apress.ravi.chapter2.Sql.SqlServerConnect;
 import com.apress.ravi.chapter2.dto.AssetsDTO;
-// import com.apress.ravi.chapter2.repository.AssetJpaRepository;
-import com.apress.ravi.chapter2.sql.SqlServerConnect;
 
 /**
  * @author Ravi Kant Soni
